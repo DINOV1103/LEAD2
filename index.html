@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ma'lumotlaringizni qoldiring</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif; }
+    body { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; display: flex; justify-content: center; align-items: center; padding: 20px; }
+    .container { background: white; border-radius: 24px; padding: 40px 32px; width: 100%; max-width: 440px; box-shadow: 0 25px 80px rgba(0,0,0,0.35); animation: slideUp 0.4s ease-out; }
+    @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+    .header { text-align: center; margin-bottom: 36px; }
+    .header h1 { font-size: 26px; font-weight: 700; color: #1f2937; margin-bottom: 10px; }
+    .header p { color: #6b7280; font-size: 15px; line-height: 1.5; }
+    .form-group { margin-bottom: 24px; }
+    label { display: block; margin-bottom: 10px; font-weight: 600; color: #374151; font-size: 14px; }
+    input, select { width: 100%; padding: 14px 16px; border: 2px solid #e5e7eb; border-radius: 14px; font-size: 15px; transition: all 0.2s ease; background: #f9fafb; color: #1f2937; }
+    input:focus, select:focus { outline: none; border-color: #667eea; background: white; box-shadow: 0 0 0 4px rgba(102,126,234,0.15); }
+    input::placeholder { color: #9ca3af; }
+    .phone-input { display: flex; gap: 10px; }
+    .country-code { width: 90px; flex-shrink: 0; background: #f3f4f6; font-weight: 600; color: #374151; text-align: center; cursor: not-allowed; }
+    .phone-input input#phone { flex: 1; }
+    .char-counter { text-align: right; font-size: 12px; color: #9ca3af; margin-top: 6px; height: 16px; }
+    .char-counter.active { color: #667eea; font-weight: 500; }
+    .char-counter.full { color: #10b981; }
+    .char-counter.error { color: #ef4444; font-weight: 600; }
+    .submit-btn { width: 100%; padding: 16px 20px; border: none; background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; border-radius: 14px; font-weight: 700; font-size: 16px; cursor: pointer; transition: all 0.25s ease; box-shadow: 0 4px 14px rgba(16,185,129,0.35); }
+    .submit-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(16,185,129,0.5); }
+    .submit-btn:disabled { opacity: 0.7; cursor: not-allowed; transform: none; }
+    .success-message { display: none; text-align: center; padding: 20px 10px; animation: fadeIn 0.3s ease; }
+    @keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+    .success-message h2 { color: #10b981; font-size: 28px; margin-bottom: 12px; }
+    .success-message p { color: #6b7280; font-size: 16px; line-height: 1.6; }
+    .success-icon { width: 70px; height: 70px; background: linear-gradient(135deg, #10b981 0%, #059669 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; box-shadow: 0 10px 30px rgba(16,185,129,0.4); }
+    .success-icon svg { width: 36px; height: 36px; stroke: white; stroke-width: 2.5; fill: none; }
+    .input-wrapper { position: relative; }
+    .input-wrapper svg { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); width: 18px; height: 18px; stroke: #9ca3af; fill: none; stroke-width: 2; pointer-events: none; }
+    .input-wrapper input, .input-wrapper select { padding-left: 42px; }
+    .error-msg { color: #ef4444; font-size: 13px; margin-top: 6px; display: none; }
+    .error-msg.show { display: block; }
+    @media (max-width: 480px) { .container { padding: 32px 24px; border-radius: 20px; } .header h1 { font-size: 24px; } }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <h1>Ma'lumotlaringizni qoldiring</h1>
+    <p>Biz siz bilan tez orada bog'lanamiz</p>
+  </div>
+  <form id="leadForm">
+    <div class="form-group">
+      <label for="fullname">Ismingiz</label>
+      <div class="input-wrapper">
+        <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+        <input type="text" id="fullname" placeholder="Ism va familiyangiz" required autocomplete="name">
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="phone">Telefon raqam</label>
+      <div class="phone-input">
+        <input value="+998" class="country-code" readonly>
+        <input type="tel" id="phone" placeholder="90 123 45 67" maxlength="9" required inputmode="numeric">
+      </div>
+      <div class="char-counter" id="phoneCounter">0/9 raqam</div>
+      <div class="error-msg" id="phoneError">Raqam kamida 9 ta bo'lishi kerak!</div>
+    </div>
+
+    <div class="form-group">
+      <label for="region">Viloyat</label>
+      <div class="input-wrapper">
+        <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+        <select id="region" required>
+          <option value="">Viloyatni tanlang</option>
+          <option>Toshkent shahar</option>
+          <option>Toshkent viloyati</option>
+          <option>Namangan viloyati</option>
+          <option>Andijon viloyati</option>
+          <option>Farg'ona viloyati</option>
+          <option>Samarqand viloyati</option>
+          <option>Buxoro viloyati</option>
+          <option>Xorazm viloyati</option>
+          <option>Qashqadaryo viloyati</option>
+          <option>Surxondaryo viloyati</option>
+          <option>Jizzax viloyati</option>
+          <option>Sirdaryo viloyati</option>
+          <option>Navoiy viloyati</option>
+          <option>Qoraqalpog'iston</option>
+        </select>
+      </div>
+    </div>
+
+    <button type="submit" class="submit-btn">YUBORISH</button>
+    <div class="error-msg" id="submitError" style="text-align:center;margin-top:12px;"></div>
+  </form>
+
+  <div class="success-message" id="success">
+    <div class="success-icon">      <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>
+    </div>
+    <h2>Rahmat! 🎉</h2>
+    <p>Ma'lumotingiz muvaffaqiyatli qabul qilindi.<br>Tez orada siz bilan bog'lanamiz.</p>
+  </div>
+</div>
+
+<script>
+// ⚠️ TELEGRAM SOZLAMALARI - O'ZGARTIRILMADI
+const BOT_TOKEN = "8626319052:AAE4WvmSmDcR-MTGygG0WKK_REFBEMG8c-M";
+const CHAT_ID = "1691140865";
+const GROUP_ID = "-1003831027670";
+
+const form = document.getElementById("leadForm");
+const success = document.getElementById("success");
+const phoneInput = document.getElementById("phone");
+const phoneCounter = document.getElementById("phoneCounter");
+const phoneError = document.getElementById("phoneError");
+const submitError = document.getElementById("submitError");
+
+// Telefon raqami: faqat raqamlar, maksimal 9 ta
+phoneInput.addEventListener("input", function() {
+  this.value = this.value.replace(/[^0-9]/g, '').slice(0, 9);
+  const len = this.value.length;
+  phoneCounter.textContent = `${len}/9 raqam`;
+  phoneCounter.className = 'char-counter' + (len === 9 ? ' full' : len > 0 ? ' active' : '');
+  phoneError.classList.remove('show');
+  phoneCounter.classList.remove('error');
+});
+
+form.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  submitError.classList.remove('show');
+  
+  const name = document.getElementById("fullname").value.trim();
+  const phone = document.getElementById("phone").value;
+  const region = document.getElementById("region").value;
+
+  // Validatsiya
+  if (phone.length !== 9) {
+    phoneCounter.classList.add('error');
+    phoneError.classList.add('show');
+    phoneInput.focus();
+    return;
+  }
+
+  const message = `
+📩 <b>YANGI LEAD</b>
+
+👤 <b>Ism:</b> ${name}📱 <b>Telefon:</b> +998 ${phone}
+📍 <b>Viloyat:</b> ${region}
+🕐 <b>Sana:</b> ${new Date().toLocaleString()}
+`;
+
+  const btn = form.querySelector('.submit-btn');
+  btn.disabled = true;
+  btn.textContent = 'YUBORILMOQDA...';
+
+  try {
+    // Birinchi Chat_ID ga yuborish
+    await sendTelegram(CHAT_ID, message);
+    
+    // GROUP_ID ga yuborish (agar group bo'lsa)
+    if (GROUP_ID && GROUP_ID.toString().startsWith('-')) {
+      await sendTelegram(GROUP_ID, message);
+    }
+
+    form.style.display = "none";
+    success.style.display = "block";
+    
+  } catch (err) {
+    console.error("Telegram xatoligi:", err);
+    submitError.textContent = "⚠️ Yuborishda xatolik: " + err.message;
+    submitError.classList.add('show');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'YUBORISH';
+  }
+});
+
+async function sendTelegram(chat, text) {
+  const url = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`;
+  
+  const res = await fetch(url, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      chat_id: chat,
+      text: text,
+      parse_mode: "HTML"
+    })
+  });
+
+  const data = await res.json();
+  
+  if (!res.ok || !data.ok) {
+    throw new Error(data.description || "Telegram API xatoligi");
+  }
+    return data;
+}
+</script>
+
+</body>
+</html>
