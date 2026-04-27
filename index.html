@@ -105,9 +105,9 @@
 
 <script>
 // ⚠️ TELEGRAM SOZLAMALARI - O'ZGARTIRILMADI
-const BOT_TOKEN = "8626319052:AAE4WvmSmDcR-MTGygG0WKK_REFBEMG8c-M";
+const BOT_TOKEN = "8762897107:AAHkEcAvRUGgHE0bUBUEjuo8gQS4OrY4w7k";
 const CHAT_ID = "1691140865";
-const GROUP_ID = "-1003831027670";
+const GROUP_ID = "-1003812351253";
 
 const form = document.getElementById("leadForm");
 const success = document.getElementById("success");
@@ -143,9 +143,10 @@ form.addEventListener("submit", async (e) => {
   }
 
   const message = `
-📩 <b>YANGI LEAD</b>
+📩 <b>KANAL 2</b>
 
-👤 <b>Ism:</b> ${name}📱 <b>Telefon:</b> +998 ${phone}
+👤 <b>Ism:</b> ${name}
+📱 <b>Telefon:</b> +998 ${phone}
 📍 <b>Viloyat:</b> ${region}
 🕐 <b>Sana:</b> ${new Date().toLocaleString()}
 `;
@@ -158,9 +159,14 @@ form.addEventListener("submit", async (e) => {
     // Birinchi Chat_ID ga yuborish
     await sendTelegram(CHAT_ID, message);
     
-    // GROUP_ID ga yuborish (agar group bo'lsa)
-    if (GROUP_ID && GROUP_ID.toString().startsWith('-')) {
-      await sendTelegram(GROUP_ID, message);
+    // GROUP_ID ga yuborish (xatolikni yashiramiz)
+    try {
+      if (GROUP_ID) {
+        await sendTelegram(GROUP_ID, message);
+      }
+    } catch (groupErr) {
+      console.warn("Guruhga yuborishda xatolik:", groupErr);
+      // Guruh xatosi foydalanuvchiga ko'rsatilmaydi
     }
 
     form.style.display = "none";
